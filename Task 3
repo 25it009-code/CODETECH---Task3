@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Application</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, sans-serif;
+        }
+
+        body{
+            background:linear-gradient(to right,#4facfe,#00f2fe);
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .quiz-container{
+            background:white;
+            width:450px;
+            padding:25px;
+            border-radius:10px;
+            box-shadow:0 0 15px rgba(0,0,0,0.2);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:20px;
+            color:#333;
+        }
+
+        .question{
+            font-size:22px;
+            margin-bottom:20px;
+        }
+
+        .option{
+            background:#f4f4f4;
+            padding:12px;
+            margin:10px 0;
+            border-radius:5px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .option:hover{
+            background:#dbeafe;
+        }
+
+        .btn{
+            width:100%;
+            padding:12px;
+            border:none;
+            background:#007bff;
+            color:white;
+            font-size:18px;
+            border-radius:5px;
+            cursor:pointer;
+            margin-top:15px;
+        }
+
+        .btn:hover{
+            background:#0056b3;
+        }
+
+        .result{
+            text-align:center;
+            font-size:24px;
+            color:green;
+            margin-top:20px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="quiz-container">
+
+        <h1>Quiz App</h1>
+
+        <div id="quiz">
+
+            <div class="question" id="question">
+                Question Text
+            </div>
+
+            <div class="options" id="options">
+            </div>
+
+            <button class="btn" onclick="nextQuestion()">
+                Next Question
+            </button>
+
+        </div>
+
+        <div class="result" id="result"></div>
+
+    </div>
+
+<script>
+
+    const quizData = [
+
+        {
+            question: "What does HTML stand for?",
+            options: [
+                "Hyper Text Markup Language",
+                "High Text Machine Language",
+                "Hyper Transfer Markup Language",
+                "Home Tool Markup Language"
+            ],
+            answer: "Hyper Text Markup Language"
+        },
+
+        {
+            question: "Which language is used for styling web pages?",
+            options: [
+                "HTML",
+                "Python",
+                "CSS",
+                "Java"
+            ],
+            answer: "CSS"
+        },
+
+        {
+            question: "Which language is used for web development?",
+            options: [
+                "JavaScript",
+                "C",
+                "C++",
+                "Assembly"
+            ],
+            answer: "JavaScript"
+        },
+
+        {
+            question: "Which company developed Java?",
+            options: [
+                "Microsoft",
+                "Sun Microsystems",
+                "Google",
+                "Apple"
+            ],
+            answer: "Sun Microsystems"
+        }
+
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selectedAnswer = "";
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const resultEl = document.getElementById("result");
+
+    loadQuestion();
+
+    function loadQuestion(){
+
+        const currentQuiz = quizData[currentQuestion];
+
+        questionEl.innerText = currentQuiz.question;
+
+        optionsEl.innerHTML = "";
+
+        currentQuiz.options.forEach(option => {
+
+            const div = document.createElement("div");
+
+            div.classList.add("option");
+
+            div.innerText = option;
+
+            div.onclick = () => selectAnswer(option, div);
+
+            optionsEl.appendChild(div);
+
+        });
+    }
+
+    function selectAnswer(answer, element){
+
+        selectedAnswer = answer;
+
+        const allOptions = document.querySelectorAll(".option");
+
+        allOptions.forEach(option => {
+            option.style.background = "#f4f4f4";
+        });
+
+        element.style.background = "#90ee90";
+    }
+
+    function nextQuestion(){
+
+        if(selectedAnswer === ""){
+            alert("Please select an answer!");
+            return;
+        }
+
+        if(selectedAnswer === quizData[currentQuestion].answer){
+            score++;
+        }
+
+        selectedAnswer = "";
+
+        currentQuestion++;
+
+        if(currentQuestion < quizData.length){
+            loadQuestion();
+        }
+        else{
+            showResult();
+        }
+    }
+
+    function showResult(){
+
+        document.getElementById("quiz").style.display = "none";
+
+        resultEl.innerHTML = `
+            Quiz Completed! <br><br>
+            Your Score: ${score} / ${quizData.length}
+        `;
+    }
+
+</script>
+
+</body>
+</html>
